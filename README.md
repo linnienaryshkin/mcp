@@ -129,3 +129,74 @@ For clients that support stdio MCP servers, use a command like:
   }
 }
 ```
+
+### Alternative stdio client config (launch through npm script)
+
+If you prefer to launch through a project script:
+
+```json
+{
+  "mcpServers": {
+    "teams-mcp": {
+      "command": "npm",
+      "args": ["run", "dev"],
+      "cwd": "/absolute/path/to/mcp",
+      "env": {
+        "TEAMS_WEBHOOK_URL": "https://your-teams-webhook-url"
+      }
+    }
+  }
+}
+```
+
+### Streamable HTTP server (standalone terminal launch)
+
+Start the Streamable HTTP MCP server in a separate terminal:
+
+```bash
+export TEAMS_WEBHOOK_URL="https://your-teams-webhook-url"
+export PORT=8787
+npm run dev:http
+```
+
+Compiled mode:
+
+```bash
+npm run build
+PORT=8787 npm run start:http
+```
+
+Default endpoint:
+
+```text
+http://127.0.0.1:8787/mcp
+```
+
+### Example MCP client configuration (Streamable HTTP)
+
+For clients that support HTTP MCP endpoints:
+
+```json
+{
+  "mcpServers": {
+    "teams-mcp-http": {
+      "url": "http://127.0.0.1:8787/mcp"
+    }
+  }
+}
+```
+
+Optional auth header example:
+
+```json
+{
+  "mcpServers": {
+    "teams-mcp-http": {
+      "url": "http://127.0.0.1:8787/mcp",
+      "headers": {
+        "Authorization": "Bearer <token>"
+      }
+    }
+  }
+}
+```
