@@ -1,6 +1,8 @@
-# MCP (Model Context Protocol) Server
+# [MCP (Model Context Protocol) Server](https://github.com/linnienaryshkin/mcp)
 
 Let's experiment with creating our own MCP server to learn how this technology works in depth.
+
+Here is a settled GitHub Copilot Space for this repository: <https://github.com/copilot/spaces/linnienaryshkin/1>
 
 ## Table of contents
 
@@ -15,16 +17,7 @@ Let's experiment with creating our own MCP server to learn how this technology w
       - [Standard HTTP](#standard-http)
       - [Server-Sent Events (SSE)](#server-sent-events-sse)
       - [Streamable HTTP](#streamable-http)
-  - [Implementation in this repository](#implementation-in-this-repository)
-    - [Implemented tools](#implemented-tools)
-    - [Setup](#setup)
-    - [Run locally (dev)](#run-locally-dev)
-    - [Build and run](#build-and-run)
-    - [Teams webhook configuration](#teams-webhook-configuration)
-    - [Example MCP client configuration (stdio)](#example-mcp-client-configuration-stdio)
-    - [Alternative stdio client config (launch through npm script)](#alternative-stdio-client-config-launch-through-npm-script)
-    - [Streamable HTTP server (standalone terminal launch)](#streamable-http-server-standalone-terminal-launch)
-    - [Example MCP client configuration (Streamable HTTP)](#example-mcp-client-configuration-streamable-http)
+  - [Setup](#setup)
   - [References](#references)
 
 ## Goal
@@ -93,129 +86,12 @@ MCP is a protocol for communication between AI agents and tools. It defines a st
 - Best for long-running tasks and large data transfers
 - Currently considered to be the future of MCP communication
 
-## Implementation in this repository
+## Setup
 
-This repository now includes a working TypeScript MCP server in `src/server.ts`.
-
-### Implemented tools
-
-- `ping`: Simple health check and optional echo.
-- `send_message_to_teams`: Sends a text message to a Microsoft Teams Incoming Webhook.
-
-### Setup
+Install dependencies from the root of the repository:
 
 ```bash
 npm install
-```
-
-### Run locally (dev)
-
-```bash
-npm run dev
-```
-
-### Build and run
-
-```bash
-npm run build
-npm start
-```
-
-### Teams webhook configuration
-
-You can pass `webhookUrl` directly in tool arguments, or set an environment variable before launching the server:
-
-```bash
-export TEAMS_WEBHOOK_URL="https://your-teams-webhook-url"
-```
-
-### Example MCP client configuration (stdio)
-
-For clients that support stdio MCP servers, use a command like:
-
-```json
-{
-  "mcpServers": {
-    "teams-mcp": {
-      "command": "node",
-      "args": ["/absolute/path/to/mcp/dist/stdio-server.js"],
-      "env": {
-        "TEAMS_WEBHOOK_URL": "https://your-teams-webhook-url"
-      }
-    }
-  }
-}
-```
-
-### Alternative stdio client config (launch through npm script)
-
-If you prefer to launch through a project script:
-
-```json
-{
-  "mcpServers": {
-    "teams-mcp": {
-      "command": "npm",
-      "args": ["run", "dev"],
-      "cwd": "/absolute/path/to/mcp",
-      "env": {
-        "TEAMS_WEBHOOK_URL": "https://your-teams-webhook-url"
-      }
-    }
-  }
-}
-```
-
-### Streamable HTTP server (standalone terminal launch)
-
-Start the Streamable HTTP MCP server in a separate terminal:
-
-```bash
-export TEAMS_WEBHOOK_URL="https://your-teams-webhook-url"
-export PORT=8787
-npm run dev:http
-```
-
-Compiled mode:
-
-```bash
-npm run build
-PORT=8787 npm run start:http
-```
-
-Default endpoint:
-
-```text
-http://127.0.0.1:8787/mcp
-```
-
-### Example MCP client configuration (Streamable HTTP)
-
-For clients that support HTTP MCP endpoints:
-
-```json
-{
-  "mcpServers": {
-    "teams-mcp-http": {
-      "url": "http://127.0.0.1:8787/mcp"
-    }
-  }
-}
-```
-
-Optional auth header example:
-
-```json
-{
-  "mcpServers": {
-    "teams-mcp-http": {
-      "url": "http://127.0.0.1:8787/mcp",
-      "headers": {
-        "Authorization": "Bearer <token>"
-      }
-    }
-  }
-}
 ```
 
 ## References
