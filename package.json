@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "MCP server in TypeScript with stdio transport and example tools.",
   "type": "module",
-  "main": "dist/server.js",
+  "main": "dist/stdio-server.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "dev": "tsx src/server.ts",
+    "dev": "tsx src/stdio-server.ts",
     "dev:http": "tsx src/streamable-http-server.ts",
-    "start": "node dist/server.js",
+    "start": "node dist/stdio-server.js",
     "start:http": "node dist/streamable-http-server.js",
     "check": "tsc --noEmit"
   },
