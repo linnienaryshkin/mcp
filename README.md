@@ -2,6 +2,10 @@
 
 Let's experiment with creating our own MCP server, to learn how this tech works in depth.
 
+## Goal
+
+I wanna have an MCP server to be available to connect via e.g. Cursor or VS Code GitHub Copilot MCP clients, and send via Agent chat a message into my MS Teams chat.
+
 ## References
 
 - <https://modelcontextprotocol.io/docs/develop/build-server>
