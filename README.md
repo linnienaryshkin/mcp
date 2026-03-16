@@ -75,3 +75,57 @@ MCP is a protocol for communication between AI agents and tools. It defines a st
 * [Create MCP Server in Node.js: Step-by-Step Guide | by Smit Pipaliya | ServerAvatar | Medium](https://medium.com/serveravatar/create-mcp-server-in-node-js-step-by-step-guide-d60ddc659002)
 * [Building Your First MCP Server: A Beginner’s Guide - DEV Community](https://dev.to/kevin-uehara/building-your-first-mcp-server-a-beginners-guide-59ml)
 * [YouTube](https://www.youtube.com/watch?v=299LRZQchpI)
+
+## Implementation in this repository
+
+This repository now includes a working TypeScript MCP server in `src/server.ts`.
+
+### Implemented tools
+
+* `ping`: Simple health check and optional echo.
+* `send_message_to_teams`: Sends a text message to a Microsoft Teams Incoming Webhook.
+
+### Setup
+
+```bash
+npm install
+```
+
+### Run locally (dev)
+
+```bash
+npm run dev
+```
+
+### Build and run
+
+```bash
+npm run build
+npm start
+```
+
+### Teams webhook configuration
+
+You can pass `webhookUrl` directly in tool arguments, or set an environment variable before launching the server:
+
+```bash
+export TEAMS_WEBHOOK_URL="https://your-teams-webhook-url"
+```
+
+### Example MCP client configuration (stdio)
+
+For clients that support stdio MCP servers, use a command like:
+
+```json
+{
+  "mcpServers": {
+    "teams-mcp": {
+      "command": "node",
+      "args": ["/absolute/path/to/mcp/dist/server.js"],
+      "env": {
+        "TEAMS_WEBHOOK_URL": "https://your-teams-webhook-url"
+      }
+    }
+  }
+}
+```
