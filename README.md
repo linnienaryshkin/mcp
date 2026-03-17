@@ -18,6 +18,9 @@ Here is a settled GitHub Copilot Space for this repository: <https://github.com/
       - [Server-Sent Events (SSE)](#server-sent-events-sse)
       - [Streamable HTTP](#streamable-http)
   - [Setup](#setup)
+    - [Installation](#installation)
+    - [Environment Variables](#environment-variables)
+    - [Building and Running](#building-and-running)
   - [References](#references)
 
 ## Goal
@@ -88,11 +91,58 @@ MCP is a protocol for communication between AI agents and tools. It defines a st
 
 ## Setup
 
+### Installation
+
 Install dependencies from the root of the repository:
 
 ```bash
 npm install
 ```
+
+### Environment Variables
+
+This project uses environment variables to configure the MCP server. Follow these steps to set up your environment:
+
+**Copy the environment template:**
+
+```bash
+cp .env.example .env
+```
+
+**Edit `.env` with your configuration:**
+
+```bash
+# Required
+TEAMS_WEBHOOK_URL=https://your-organization.webhook.office.com/webhookb2/...
+
+# Optional (defaults shown)
+PORT=8787
+HOST=127.0.0.1
+```
+
+1. **Get your Teams Webhook URL:**
+   - Open Microsoft Teams
+   - Go to your target channel → **Settings** → **Connectors**
+   - Search for "Incoming Webhook" and select it
+   - Click **Configure** and give it a name
+   - Copy the webhook URL and paste it in `.env` as `TEAMS_WEBHOOK_URL`
+
+2. **Ensure `.env` is not committed** (it's already in `.gitignore`, but double-check for sensitive data)
+
+### Building and Running
+
+```bash
+# Build TypeScript
+npm run build
+
+# Run stdio server
+node dist/stdio-server/index.js
+
+# Run streamable HTTP server
+node dist/streamable-http-server/index.js
+```
+
+**Note:** The server will fail to start if required environment variables are missing. Check the error message for which variable needs to be set.
 
 ## References
 

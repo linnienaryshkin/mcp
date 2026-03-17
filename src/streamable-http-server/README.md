@@ -10,8 +10,6 @@ Streamable HTTP transport for MCP server communication. Allows continuous data s
 ## Run locally (dev)
 
 ```bash
-export TEAMS_WEBHOOK_URL="https://your-teams-webhook-url"
-export PORT=8787
 tsx src/streamable-http-server/index.ts
 ```
 
@@ -21,21 +19,13 @@ Compiled mode:
 
 ```bash
 npm run build
-PORT=8787 node dist/streamable-http-server/index.js
+node dist/streamable-http-server/index.js
 ```
 
 Default endpoint:
 
 ```text
 http://127.0.0.1:8787/mcp
-```
-
-## Teams webhook configuration
-
-You can pass `webhookUrl` directly in tool arguments, or set an environment variable before launching the server:
-
-```bash
-export TEAMS_WEBHOOK_URL="https://your-teams-webhook-url"
 ```
 
 ## MCP client configuration (Streamable HTTP)

@@ -5,9 +5,8 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 import * as z from "zod/v4";
+import { config } from "../lib/config.js";
 
-const PORT = Number(process.env.PORT ?? "8787");
-const HOST = process.env.HOST ?? "127.0.0.1";
 
 type SessionRuntime = {
   server: McpServer;
@@ -74,11 +73,11 @@ function createMcpServer(): McpServer {
       },
     },
     async ({ message, webhookUrl }) => {
-      const resolvedWebhook = webhookUrl ?? process.env.TEAMS_WEBHOOK_URL;
+      const resolvedWebhook = webhookUrl ?? config.teams.webhookUrl;
 
       if (!resolvedWebhook) {
         throw new Error(
-          "Missing webhook URL. Pass webhookUrl argument or set TEAMS_WEBHOOK_URL.",
+          "Missing webhook URL. Pass webhookUrl argument or set TEAMS_WEBHOOK_URL in .env file.",
         );
       }
 
@@ -254,8 +253,8 @@ const httpServer = createServer((req, res) => {
   void handleMcpRequest(req, res);
 });
 
-httpServer.listen(PORT, HOST, () => {
-  console.log(`Streamable HTTP MCP server listening on http://${HOST}:${PORT}/mcp`);
+httpServer.listen(config.server.port, config.server.host, () => {
+  console.log(`Streamable HTTP MCP server listening on http://${config.server.host}:${config.server.port}/mcp`);
 });
 
 async function shutdown(): Promise<void> {

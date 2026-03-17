@@ -20,14 +20,6 @@ npm run build
 node dist/stdio-server/index.js
 ```
 
-## Teams webhook configuration
-
-You can pass `webhookUrl` directly in tool arguments, or set an environment variable before launching the server:
-
-```bash
-export TEAMS_WEBHOOK_URL="https://your-teams-webhook-url"
-```
-
 ## MCP client configuration (stdio)
 
 For clients that support stdio MCP servers, use a command like:
