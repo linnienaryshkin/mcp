@@ -1,5 +1,5 @@
-import "dotenv/config";
-import * as z from "zod/v4";
+import 'dotenv/config';
+import * as z from 'zod/v4';
 
 /**
  * Environment variables schema with validation
@@ -7,8 +7,8 @@ import * as z from "zod/v4";
 const envSchema = z.object({
   // Teams configuration
   TEAMS_WEBHOOK_URL: z
-    .url("TEAMS_WEBHOOK_URL must be a valid URL")
-    .describe("MS Teams incoming webhook URL for sending messages"),
+    .url('TEAMS_WEBHOOK_URL must be a valid URL')
+    .describe('MS Teams incoming webhook URL for sending messages'),
 
   // HTTP server configuration (for streamable-http-server)
   PORT: z
@@ -16,12 +16,9 @@ const envSchema = z.object({
     .transform((val) => Number(val))
     .pipe(z.number().int().min(1).max(65535))
     .optional()
-    .describe("HTTP server port"),
+    .describe('HTTP server port'),
 
-  HOST: z
-    .string()
-    .optional()
-    .describe("HTTP server host"),
+  HOST: z.string().optional().describe('HTTP server host'),
 });
 
 /**
@@ -32,11 +29,11 @@ function loadConfig() {
 
   if (!result.success) {
     const errorMessages = result.error.issues
-      .map((err: z.core.$ZodIssue) => `  - ${err.path.join(".")}: ${err.message}`)
-      .join("\n");
+      .map((err: z.core.$ZodIssue) => `  - ${err.path.join('.')}: ${err.message}`)
+      .join('\n');
 
-    console.error("❌ Environment validation failed:\n" + errorMessages);
-    console.error("\nCreate a .env file with required variables. See .env.example for template.");
+    console.error('❌ Environment validation failed:\n' + errorMessages);
+    console.error('\nCreate a .env file with required variables. See .env.example for template.');
     process.exit(1);
   }
 
