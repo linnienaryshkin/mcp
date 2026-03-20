@@ -1,0 +1,120 @@
+{
+  "project": "teams-mcp-server",
+  "branchName": "ralph/teams-mcp-server-npm-package",
+  "description": "Publish teams-mcp-server as an npm package usable via npx or npm install -g, with CLI argument support for webhook URL and server config",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Configure package.json for npm publishing",
+      "description": "As a package maintainer, I want package.json to declare all fields required for a valid, publishable npm package so that npm publish and npx work correctly.",
+      "acceptanceCriteria": [
+        "name is \"teams-mcp-server\"",
+        "version is \"1.0.0\" (semver)",
+        "description clearly describes the package as an MCP server for MS Teams",
+        "author and license fields are populated (license: MIT)",
+        "engines field specifies \"node\": \">=18\"",
+        "files array is [\"dist\", \"README.md\", \"LICENSE\"]",
+        "bin field maps \"teams-mcp-server\" to \"dist/stdio-server/index.js\" and \"teams-mcp-server-http\" to \"dist/streamable-http-server/index.js\"",
+        "main points to \"dist/stdio-server/index.js\"",
+        "repository, keywords, and homepage fields are set",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Add shebangs and build script to entry point files",
+      "description": "As a user running npx teams-mcp-server, I need the binary to be executable by Node.js directly so that npx can invoke it without extra configuration.",
+      "acceptanceCriteria": [
+        "src/stdio-server/index.ts has #!/usr/bin/env node as its first line",
+        "src/streamable-http-server/index.ts has #!/usr/bin/env node as its first line",
+        "package.json has a prepublishOnly script that runs npm run build",
+        "After npm run build, dist/stdio-server/index.js and dist/streamable-http-server/index.js both exist",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Add MIT LICENSE file",
+      "description": "As a package maintainer, I want a LICENSE file in the repo so that the published npm package has a valid open source license.",
+      "acceptanceCriteria": [
+        "LICENSE file exists at project root with MIT license text",
+        "Year and author are filled in",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Implement parseCliArgs utility in config.ts",
+      "description": "As a developer, I want a single config layer that merges CLI arguments over environment variables so that both servers can use the same resolution logic without duplication.",
+      "acceptanceCriteria": [
+        "A parseCliArgs(argv: string[]) function is added (in src/lib/cli-args.ts or within config.ts) that extracts --webhook-url, --port, and --host from process.argv",
+        "Supports both --key=value and --key value forms",
+        "config.ts calls parseCliArgs and merges results: CLI value wins over env var when both are present",
+        "The existing Zod validation schema validates the final merged values",
+        "No new npm dependencies added (only process.argv, no yargs or commander)",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Add --webhook-url CLI argument support to stdio server",
+      "description": "As an MCP client operator (e.g., configuring Claude Desktop), I want to pass --webhook-url as a command-line argument so that I don't need a .env file on the target machine.",
+      "acceptanceCriteria": [
+        "stdio server reads --webhook-url via the shared parseCliArgs utility",
+        "Parsed --webhook-url value takes precedence over TEAMS_WEBHOOK_URL env var",
+        "If --webhook-url is provided and valid, server starts without requiring TEAMS_WEBHOOK_URL in the environment",
+        "Unknown arguments are ignored and do not crash the server",
+        "Existing env-only usage still works unchanged",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "Depends on US-004 (parseCliArgs utility)"
+    },
+    {
+      "id": "US-006",
+      "title": "Add --webhook-url, --port, --host CLI arguments to HTTP server",
+      "description": "As an operator running the HTTP transport, I want to pass --webhook-url, --port, and --host as CLI arguments so I can configure the server without environment variables.",
+      "acceptanceCriteria": [
+        "HTTP server reads --webhook-url, --port, and --host via the shared parseCliArgs utility",
+        "CLI values take precedence over their corresponding env vars (TEAMS_WEBHOOK_URL, PORT, HOST)",
+        "--port value is validated as an integer between 1-65535; invalid values print an error and exit with code 1",
+        "Server prints the resolved listen address on startup reflecting CLI-overridden values",
+        "Existing env-only usage still works unchanged",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "Depends on US-004 (parseCliArgs utility)"
+    },
+    {
+      "id": "US-007",
+      "title": "Update README with npm installation and MCP client setup instructions",
+      "description": "As a new user discovering the package on npm, I want clear instructions for how to use teams-mcp-server with common MCP clients so I can integrate it in under 5 minutes.",
+      "acceptanceCriteria": [
+        "README has an Installation section showing npx teams-mcp-server (zero-install) and npm install -g teams-mcp-server usage",
+        "README has a Configuration section documenting TEAMS_WEBHOOK_URL env var and --webhook-url CLI arg with examples",
+        "README has an MCP Client Setup section with a JSON snippet showing how to configure Claude Desktop / Cursor / Cline using the npx form",
+        "README has a Tools section listing ping and send_message_to_teams with input/output descriptions",
+        "README includes a note that dist/ is not committed — run npm run build locally or use the published npm package",
+        "Existing content is preserved or consolidated (not deleted)",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
