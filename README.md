@@ -1,4 +1,4 @@
-# [MCP (Model Context Protocol) Server](https://github.com/linnienaryshkin/mcp)
+# [MS Teams Notification MCP (Model Context Protocol) Server](https://github.com/linnienaryshkin/mcp)
 
 Let's experiment with creating our own MCP server to learn how this technology works in depth.
 
@@ -6,7 +6,7 @@ Here is a settled GitHub Copilot Space for this repository: <https://github.com/
 
 ## Table of contents
 
-- [MCP (Model Context Protocol) Server](#mcp-model-context-protocol-server)
+- [MS Teams Notification MCP (Model Context Protocol) Server](#ms-teams-notification-mcp-model-context-protocol-server)
   - [Table of contents](#table-of-contents)
   - [Goal](#goal)
   - [Theory | The basics](#theory--the-basics)
@@ -140,6 +140,19 @@ node dist/stdio-server/index.js
 
 # Run streamable HTTP server
 node dist/streamable-http-server/index.js
+
+# Test Teams integration directly
+npm run test:teams -- --message "Hello from integration test"
+```
+
+Optional test flags:
+
+```bash
+# Use an explicit webhook URL
+npm run test:teams -- --webhookUrl "https://your-organization.webhook.office.com/webhookb2/..."
+
+# Dry run (validates inputs without sending)
+npm run test:teams -- --dryRun
 ```
 
 **Note:** The server will fail to start if required environment variables are missing. Check the error message for which variable needs to be set.

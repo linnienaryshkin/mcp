@@ -1,7 +1,9 @@
+import 'dotenv/config';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import * as z from 'zod/v4';
 import { config } from '../lib/config.js';
+import { sendTeamsMessage } from '../lib/teams-integration.js';
 
 const server = new McpServer({
   name: 'teams-mcp-server',
@@ -30,55 +32,39 @@ server.registerTool(
   },
 );
 
-server.registerTool(
-  'send_message_to_teams',
-  {
-    description: 'Send a plain text message to an MS Teams Incoming Webhook URL.',
-    inputSchema: {
-      message: z.string().min(1).describe('The text message to send to the Teams channel.'),
-      webhookUrl: z
-        .string()
-        .url()
-        .optional()
-        .describe('Optional Teams webhook URL. If omitted, TEAMS_WEBHOOK_URL from env is used.'),
-    },
-  },
-  async ({ message, webhookUrl }) => {
-    const resolvedWebhook = webhookUrl ?? config.teams.webhookUrl;
-
-    if (!resolvedWebhook) {
-      throw new Error(
-        'Missing webhook URL. Pass webhookUrl argument or set TEAMS_WEBHOOK_URL in .env file.',
-      );
-    }
-
-    const response = await fetch(resolvedWebhook, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+function registerSendMessageToTeamsTool(server: McpServer): void {
+  server.registerTool(
+    'send_message_to_teams',
+    {
+      description: 'Send a plain text message to an MS Teams Incoming Webhook URL.',
+      inputSchema: {
+        message: z.string().min(1).describe('The text message to send to the Teams channel.'),
       },
-      body: JSON.stringify({
-        text: message,
-      }),
-    });
+    },
+    async ({ message }) => {
+      const resolvedWebhook = config.teams.webhookUrl;
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `Teams webhook failed (${response.status} ${response.statusText}): ${errorText}`,
-      );
-    }
+      if (!resolvedWebhook) {
+        throw new Error(
+          'Missing webhook URL. Pass webhookUrl argument or set TEAMS_WEBHOOK_URL in .env file.',
+        );
+      }
 
-    return {
-      content: [
-        {
-          type: 'text',
-          text: 'Message sent to Microsoft Teams successfully.',
-        },
-      ],
-    };
-  },
-);
+      await sendTeamsMessage(message, resolvedWebhook);
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: 'Message sent to Microsoft Teams successfully.',
+          },
+        ],
+      };
+    },
+  );
+}
+
+registerSendMessageToTeamsTool(server);
 
 async function main(): Promise<void> {
   const transport = new StdioServerTransport();
